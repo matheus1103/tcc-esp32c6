@@ -21,8 +21,6 @@ const char* MyLib::pers = "personalized_data";
 MyLib::MyLib() {}
 
 void MyLib::mbedtls_init(Algorithms a) {
-    ESP_LOGI(TAG, "Initializing mbedtls...");
-
     // Inicializar SPIFFS usando a API do ESP-IDF
     esp_vfs_spiffs_conf_t conf = {
         .base_path = "/spiffs",
@@ -57,8 +55,6 @@ void MyLib::mbedtls_init(Algorithms a) {
         return;
     }
 
-    ESP_LOGI(TAG, "Seeding the RNG...");
-
     mbedtls_pk_init(&pk_ctx);
     mbedtls_ctr_drbg_init(&ctr_drbg);
     mbedtls_entropy_init(&entropy);
@@ -69,15 +65,11 @@ void MyLib::mbedtls_init(Algorithms a) {
         return;
     }
 
-    ESP_LOGI(TAG, "Setting up pk context with chosen type...");
-
     ret = mbedtls_pk_setup(&pk_ctx, mbedtls_pk_info_from_type(pk_type));
     if (ret != 0) {
         ESP_LOGE(TAG, "Failed setting up pk context");
         return;
     }
-
-    ESP_LOGI(TAG, "Initialization complete");
 }
 
 void MyLib::mbedtls_gen_keys() {
@@ -121,14 +113,12 @@ void MyLib::mbedtls_gen_keys() {
             ESP_LOGE(TAG, "EDDSA 448 key generation not implemented");
             break;
         case RSA:
-            ESP_LOGI(TAG, "Generating the RSA key pair...");
             mbedtls_gen_keys(RSA_KEY_SIZE, RSA_EXPONENT);
             break;
     }
 }
 
 void MyLib::mbedtls_gen_keys(unsigned int rsa_key_size, int rsa_exponent) {
-    ESP_LOGI(TAG, "Generating the RSA key pair...");
     mbedtls_rsa_key_size = rsa_key_size;
 
     int ret;
